@@ -60,9 +60,7 @@ class InputFrontend(pykka.ThreadingActor, core.CoreListener):
         
 
     def on_start(self):
-        self.reload_playlists()
-        self.change_playlist(0)
-        
+        self.playlists_loaded()
         
         self.inputthread=InputThread()
         self.inputthread.registerHandler(VolumeHandler(self.config["volume_device"], "EV_REL", self.config["volume_axis"], self.actor_ref))
@@ -100,7 +98,7 @@ class InputFrontend(pykka.ThreadingActor, core.CoreListener):
           self.core.tracklist.add(uri=self.playlists[self.selected_playlist].uri)
           self.core.playback.play()
         
-    def reload_playlists(self):
+    def playlists_loaded(self):
         self.playlists = []
         for playlist in self.core.playlists.playlists.get():
             self.playlists.append(playlist)
