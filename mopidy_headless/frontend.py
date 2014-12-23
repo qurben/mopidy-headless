@@ -92,11 +92,13 @@ class InputFrontend(pykka.ThreadingActor, core.CoreListener):
         self.core.playback.mute = mute
 
     def change_playlist(self, value):
-        self.selected_playlist= (self.selected_playlist+1) % len(self.playlists)
-        logger.debug("Change playlist: {0}".format(self.selected_playlist))
-        self.core.tracklist.clear()
-        self.core.tracklist.add(uri=self.playlists[self.selected_playlist].uri)
-        self.core.playback.play()
+        # Only change playlists when it is possible
+        if len(self.playlists) > 0:
+          self.selected_playlist= (self.selected_playlist+1) % len(self.playlists)
+          logger.debug("Change playlist: {0}".format(self.selected_playlist))
+          self.core.tracklist.clear()
+          self.core.tracklist.add(uri=self.playlists[self.selected_playlist].uri)
+          self.core.playback.play()
         
     def reload_playlists(self):
         self.playlists = []
