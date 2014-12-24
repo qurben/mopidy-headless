@@ -37,15 +37,17 @@ class InputThread(threading.Thread):
     #Check if device has needed event
     capabilities= device.capabilities()
     if handler.event_type in capabilities:
-      if (handler.event_code in capabilities[handler.event_type]):
-        self.handlers_by_fd[device.fd].append(handler)
-        return True
-      else:
+      for event_code in handler.event_codes:
+        if (event_code in capabilities[handler.event_type]):
+          self.handlers_by_fd[device.fd].append(handler)
+        else:
           logger.warning('Event {0} not found in input device "{1}"'.format(ecodes.bytype[handler.event_type][handler.event_code], device.name))
+          return False
     else:
       logger.warning('Input device "{1}" has no capability {0}'.format(ecodes.EV[handler.event_type], device.name))
+      return False
 
-    return False
+    return True
       
 
   def run(self):
@@ -59,7 +61,7 @@ class InputThread(threading.Thread):
 
 
 class Handler(object):
-  def __init__(self, device_fn, event_type, event_code):
+  def __init__(self, device_fn, event_type, event_codes):
     self.device_fn=device_fn
 
     if (event_type in ecodes.ecodes):
@@ -67,14 +69,16 @@ class Handler(object):
     else:
       logger.error('Event type {0} unknown'.format(event_type))
 
-    if (event_code in ecodes.ecodes):
-      self.event_code=ecodes.ecodes[event_code]
-    else:
-      logger.error('Event {0} not found for {1} events'.format(event_code, event_type))
+    self.event_codes = list()
+    for event_code in event_codes:
+      if (event_code in ecodes.ecodes):
+        self.event_codes.append(ecodes.ecodes[event_code])
+      else:
+        logger.error('Event {0} not found for {1} events'.format(event_code, event_type))
 
   def check(self, event):
     if self.event_type == event.type:
-      if self.event_code == event.code:
+      if event.code in self.event_codes:
         self.handle(event)
     
   def handle(self, event):

@@ -20,16 +20,16 @@ class Extension(ext.Extension):
     def get_config_schema(self):
         schema = super(Extension, self).get_config_schema()
         schema['device'] = config.String()
-        schema['volume_up'] = config.String()
-        schema['volume_down'] = config.String()
-        schema['next_song'] = config.String()
-        schema['previous_song'] = config.String()
-        schema['next_playlist'] = config.String()
-        schema['previous_playlist'] = config.String()
-        schema['play'] = config.String()
-        schema['pause'] = config.String()
-        schema['mute'] = config.String()
+        schema['volume_up'] = config.List()
+        schema['volume_down'] = config.List()
+        schema['next_song'] = config.List()
+        schema['previous_song'] = config.List()
+        schema['next_playlist'] = config.List()
+        schema['previous_playlist'] = config.List()
+        schema['play'] = config.List()
+        schema['pause'] = config.List()
         schema['playpause'] = config.List()
+        schema['mute'] = config.List()
         return schema
 
     def setup(self, registry):
