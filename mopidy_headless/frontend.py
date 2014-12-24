@@ -91,17 +91,18 @@ class InputFrontend(pykka.ThreadingActor, core.CoreListener):
         device = self.config["device"]
 
         self.inputthread = InputThread()
-        self.inputthread.register_handler(PlayHandler(device, self.config["play"], self.actor_ref))
-        self.inputthread.register_handler(PauseHandler(device, self.config["pause"], self.actor_ref))
-        self.inputthread.register_handler(PlayPauseHandler(device, self.config["playpause"], self.actor_ref))
-        self.inputthread.register_handler(VolumeUpHandler(device, self.config["volume_up"], self.actor_ref))
-        self.inputthread.register_handler(VolumeDownHandler(device, self.config["volume_down"], self.actor_ref))
-        self.inputthread.register_handler(NextSongHandler(device, self.config["next_song"], self.actor_ref))
-        self.inputthread.register_handler(PreviousSongHandler(device, self.config["previous_song"], self.actor_ref))
-        self.inputthread.register_handler(NextPlaylistHandler(device, self.config["next_playlist"], self.actor_ref))
-        self.inputthread.register_handler(
-            PreviousPlaylistHandler(device, self.config["previous_playlist"], self.actor_ref))
-        self.inputthread.register_handler(MuteHandler(device, self.config["mute"], self.actor_ref))
+        self.inputthread.register_handlers([
+            PlayHandler(device, self.config["play"], self.actor_ref),
+            PauseHandler(device, self.config["pause"], self.actor_ref),
+            PlayPauseHandler(device, self.config["playpause"], self.actor_ref),
+            VolumeUpHandler(device, self.config["volume_up"], self.actor_ref),
+            VolumeDownHandler(device, self.config["volume_down"], self.actor_ref),
+            NextSongHandler(device, self.config["next_song"], self.actor_ref),
+            PreviousSongHandler(device, self.config["previous_song"], self.actor_ref),
+            NextPlaylistHandler(device, self.config["next_playlist"], self.actor_ref),
+            PreviousPlaylistHandler(device, self.config["previous_playlist"], self.actor_ref),
+            MuteHandler(device, self.config["mute"], self.actor_ref),
+        ])
         self.inputthread.start()
 
     def on_stop(self):

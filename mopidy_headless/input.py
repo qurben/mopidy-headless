@@ -51,6 +51,10 @@ class InputThread(threading.Thread):
 
         return True
 
+    def register_handlers(self, handlers):
+        for handler in handlers:
+            self.register_handler(handler)
+
     def run(self):
         while not self._stop.isSet():
             r, w, x = select(self.devices_by_fd, [], [], 10)
