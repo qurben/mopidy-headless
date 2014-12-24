@@ -59,6 +59,10 @@ class PauseHandler(KeyHandler):
   def press(self, actor_proxy):
     actor_proxy.pause()
 
+class PlayPauseHandler(KeyHandler):
+  def press(self, actor_proxy):
+    actor_proxy.playpause_toggle()
+
 class MuteHandler(KeyHandler):
   def press(self, actor_proxy):
     actor_proxy.toggle_mute()
@@ -82,6 +86,7 @@ class InputFrontend(pykka.ThreadingActor, core.CoreListener):
         self.inputthread=InputThread()
         self.inputthread.registerHandler(PlayHandler(device, self.config["play"], self.actor_ref))
         self.inputthread.registerHandler(PauseHandler(device, self.config["pause"], self.actor_ref))
+        self.inputthread.registerHandler(PlayPauseHandler(device, self.config["playpause"], self.actor_ref))
         self.inputthread.registerHandler(VolumeUpHandler(device, self.config["volume_up"], self.actor_ref))
         self.inputthread.registerHandler(VolumeDownHandler(device, self.config["volume_down"], self.actor_ref))
         self.inputthread.registerHandler(NextSongHandler(device, self.config["next_song"], self.actor_ref))
@@ -130,6 +135,12 @@ class InputFrontend(pykka.ThreadingActor, core.CoreListener):
 
     def pause(self):
         self.core.playback.pause()
+
+    def playpause_toggle(self):
+        if self.core.playback.state.get()==core.PlaybackState.PLAYING:
+            self.core.playback.pause()
+        else:
+            self.core.playback.play()
 
     def toggle_mute(self):
         mute = not self.core.playback.mute.get()

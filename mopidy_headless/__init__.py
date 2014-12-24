@@ -29,6 +29,7 @@ class Extension(ext.Extension):
         schema['play'] = config.String()
         schema['pause'] = config.String()
         schema['mute'] = config.String()
+        schema['playpause'] = config.List()
         return schema
 
     def setup(self, registry):
