@@ -117,6 +117,7 @@ class InputFrontend(pykka.ThreadingActor, core.CoreListener):
         self.selected_playlist = (self.selected_playlist + value) % len(self.playlists)
         self.core.tracklist.clear()
         self.core.tracklist.add(uri=self.playlists[self.selected_playlist].uri)
+        self.core.playback.play()
 
     def next_playlist(self):
         self.change_playlist(1)
