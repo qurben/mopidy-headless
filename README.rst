@@ -27,6 +27,7 @@ The default config is the following::
     mute = KEY_MUTE
     next_playlist = KEY_CHANNELDOWN, KEY_DOWN
     previous_playlist = KEY_CHANNELUP, KEY_UP
+    shuffle = KEY_RECORD
 
 The device is found in /dev/input.
 

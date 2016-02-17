@@ -75,6 +75,10 @@ class MuteHandler(KeyHandler):
     def press(self, actor_proxy):
         actor_proxy.toggle_mute()
 
+class ShuffleHandler(KeyHandler):
+    def press(self, actor_proxy):
+        actor_proxy.set_random(not actor_proxy.get_random())
+
 
 class InputFrontend(pykka.ThreadingActor, core.CoreListener):
     def __init__(self, config, core):
@@ -102,6 +106,7 @@ class InputFrontend(pykka.ThreadingActor, core.CoreListener):
             NextPlaylistHandler(device, self.config["next_playlist"], self.actor_ref),
             PreviousPlaylistHandler(device, self.config["previous_playlist"], self.actor_ref),
             MuteHandler(device, self.config["mute"], self.actor_ref),
+            ShuffleHandler(device, self.cofig["shuffle"], self.actor_ref),
         ])
         self.inputthread.start()
 

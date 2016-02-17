@@ -30,6 +30,7 @@ class Extension(ext.Extension):
         schema['pause'] = config.List()
         schema['playpause'] = config.List()
         schema['mute'] = config.List()
+        schema['shuffle'] = config.List()
         return schema
 
     def setup(self, registry):
