@@ -84,7 +84,7 @@ class Handler(object):
     def check(self, event):
         if self.event_type == event.type:
             if event.code in self.event_codes:
-                self.handle(event)
+                self.handle(event, ecodes.ecodes[event.code])
 
-    def handle(self, event):
+    def handle(self, event, keycode):
         pass
