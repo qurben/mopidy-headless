@@ -9,6 +9,7 @@ from evdev import ecodes
 import pykka
 
 from .input import InputThread, Handler
+from .decorator import debounce
 
 logger = logging.getLogger(__name__)
 
@@ -88,6 +89,7 @@ class PlaylistHandler(KeyHandler):
 
         self.event_codes = [ecodes.ecodes[key] for key in self.event_keys]
 
+    @debounce(0.5)
     def handle(self, event):
         self.actor_proxy.set_playlist(self.event_codes.index(event.code))
 
