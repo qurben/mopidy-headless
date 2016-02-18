@@ -168,6 +168,10 @@ class InputFrontend(pykka.ThreadingActor, core.CoreListener):
         else:
             self.core.playback.play()
 
+    def set_playlist(self, playlist):
+        self.core.tracklist.clear()
+        self.core.tracklist.add(uri=playlist)
+
     def toggle_mute(self):
         mute = not self.core.playback.mute.get()
         logger.debug("Muted: {0}".format(mute))
