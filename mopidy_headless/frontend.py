@@ -125,6 +125,8 @@ class InputFrontend(pykka.ThreadingActor, core.CoreListener):
         ])
         self.inputthread.start()
 
+        logger.info("Started Mopidy Headless")
+
     def on_stop(self):
         self.inputthread.stop()
 
