@@ -121,8 +121,9 @@ class InputFrontend(pykka.ThreadingActor, core.CoreListener):
             PreviousPlaylistHandler(device, self.config["previous_playlist"], self.actor_ref),
             MuteHandler(device, self.config["mute"], self.actor_ref),
             ShuffleHandler(device, self.config["shuffle"], self.actor_ref),
-            PlaylistHandler(device, self.actor_ref),
         ])
+        if self.config["enable_numbers"]:
+            self.inputthread.register_handler(PlaylistHandler(device, self.actor_ref))
         self.inputthread.start()
 
         logger.info("Started Mopidy Headless")

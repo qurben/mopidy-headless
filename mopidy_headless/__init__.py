@@ -20,6 +20,7 @@ class Extension(ext.Extension):
     def get_config_schema(self):
         schema = super(Extension, self).get_config_schema()
         schema['device'] = config.String()
+        schema['enable_numbers'] = config.Boolean()
         schema['volume_up'] = config.List()
         schema['volume_down'] = config.List()
         schema['next_song'] = config.List()

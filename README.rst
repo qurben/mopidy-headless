@@ -17,6 +17,8 @@ The default config is the following::
 
     device = ;needs to be set
 
+    enable_numbers = true
+
     volume_up = KEY_VOLUMEUP
     volume_down = KEY_VOLUMEDOWN
     next_song = KEY_RIGHT, KEY_NEXTSONG
