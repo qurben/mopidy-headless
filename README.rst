@@ -33,4 +33,6 @@ The default config is the following::
 
 The device is found in /dev/input.
 
+By default the numpad of the remote is bound to the corresponding playlists on your Mopidy installation. Disable this by setting enable_numbers to false.
+
 Make sure that the user running mopidy can read from the device you want to use. See http://puredata.info/docs/faq/how-can-i-set-permissions-so-hid-can-read-devices-in-gnu-linux to allow a non-root user to read from input devices.
