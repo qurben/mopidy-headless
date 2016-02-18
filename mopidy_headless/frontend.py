@@ -15,10 +15,9 @@ logger = logging.getLogger(__name__)
 
 
 class KeyHandler(Handler):
-    def __init__(self, device_fn, event_code, actor_ref, longpress=5):
+    def __init__(self, device_fn, event_code, actor_ref):
         super(KeyHandler, self).__init__(device_fn, "EV_KEY", event_code)
         self.actor_proxy = actor_ref.proxy()
-        self.longpress = longpress
         self.timestamp = None
 
     def handle(self, event):

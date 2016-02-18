@@ -86,5 +86,5 @@ class Handler(object):
             if event.code in self.event_codes:
                 self.handle(event)
 
-    def handle(self, event, keycode):
+    def handle(self, event):
         pass
