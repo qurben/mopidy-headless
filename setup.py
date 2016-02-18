@@ -14,7 +14,7 @@ def get_version(filename):
 setup(
     name='Mopidy-Headless',
     version=get_version('mopidy_headless/__init__.py'),
-    url='',
+    url='https://github.com/qurben/mopidy-headless',
     license='Apache License, Version 2.0',
     author='Gerben Oolbekkink',
     author_email='g.j.w.oolbekkink@gmail.com',
