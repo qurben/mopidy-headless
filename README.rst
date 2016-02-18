@@ -1,5 +1,5 @@
 Mopidy Headless
-==============
+===============
 
 Mopidy headless makes it possible to connect a HID (Human Interface Device), like a remote or a keyboard, to a Mopidy server.
 
@@ -8,7 +8,7 @@ Use ir-keytable from lirc to see which keycodes are supported::
     # ir-keytable -td /dev/input/...
 
 Configuration
--------
+-------------
 
 The default config is the following::
 
