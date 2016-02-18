@@ -163,7 +163,7 @@ class InputFrontend(pykka.ThreadingActor, core.CoreListener):
         self.core.playback.pause()
 
     def toggle_shuffle(self):
-        self.core.playback.set_random(not self.core.playback.get_random())
+        self.core.tracklist.set_random(not self.core.playback.get_random())
 
     def playpause_toggle(self):
         if self.core.playback.state.get() == core.PlaybackState.PLAYING:
