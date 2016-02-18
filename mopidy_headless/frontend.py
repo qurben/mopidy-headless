@@ -81,14 +81,16 @@ class ShuffleHandler(KeyHandler):
 
 class PlaylistHandler(KeyHandler):
     def __init__(self, device_fn, playlists, actor_ref, longpress=5):
-        self.event_codes = ['KEY_0', 'KEY_1', 'KEY_2', 'KEY_3', 'KEY_4', 'KEY_5', 'KEY_6', 'KEY_7', 'KEY_8', 'KEY_9']
-        super(PlaylistHandler, self).__init__(device_fn, self.event_codes, actor_ref)
+        self.event_keys = ['KEY_0', 'KEY_1', 'KEY_2', 'KEY_3', 'KEY_4', 'KEY_5', 'KEY_6', 'KEY_7', 'KEY_8', 'KEY_9']
+        super(PlaylistHandler, self).__init__(device_fn, self.event_keys, actor_ref)
+
+        self.event_codes = [ecodes.ecodes[key] for key in self.event_keys]
 
         self.playlists = playlists
 
-    def press(self, actor_proxy, keycode):
-        playlist = self.playlists[self.event_codes.index(keycode)]
-        actor_proxy.set_playlist(playlist)
+    def handle(self, event):
+        playlist = self.playlists[self.event_codes.index(event.code)]
+        self.actor_proxy.set_playlist(playlist)
 
 
 class InputFrontend(pykka.ThreadingActor, core.CoreListener):
