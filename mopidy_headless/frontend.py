@@ -82,17 +82,14 @@ class ShuffleHandler(KeyHandler):
         actor_proxy.toggle_shuffle()
 
 class PlaylistHandler(KeyHandler):
-    def __init__(self, device_fn, playlists, actor_ref, longpress=5):
+    def __init__(self, device_fn, actor_ref, longpress=5):
         self.event_keys = ['KEY_0', 'KEY_1', 'KEY_2', 'KEY_3', 'KEY_4', 'KEY_5', 'KEY_6', 'KEY_7', 'KEY_8', 'KEY_9']
         super(PlaylistHandler, self).__init__(device_fn, self.event_keys, actor_ref)
 
         self.event_codes = [ecodes.ecodes[key] for key in self.event_keys]
 
-        self.playlists = playlists
-
     def handle(self, event):
-        playlist = self.playlists[self.event_codes.index(event.code)]
-        self.actor_proxy.set_playlist(playlist)
+        self.actor_proxy.set_playlist(self.event_codes.index(event.code))
 
 
 class InputFrontend(pykka.ThreadingActor, core.CoreListener):
@@ -122,7 +119,7 @@ class InputFrontend(pykka.ThreadingActor, core.CoreListener):
             PreviousPlaylistHandler(device, self.config["previous_playlist"], self.actor_ref),
             MuteHandler(device, self.config["mute"], self.actor_ref),
             ShuffleHandler(device, self.config["shuffle"], self.actor_ref),
-            PlaylistHandler(device, self.config["playlists"], self.actor_ref),
+            PlaylistHandler(device, self.actor_ref),
         ])
         self.inputthread.start()
 
@@ -172,9 +169,11 @@ class InputFrontend(pykka.ThreadingActor, core.CoreListener):
         else:
             self.core.playback.play()
 
-    def set_playlist(self, playlist):
+    def set_playlist(self, playlist_nr):
+        playlist = self.core.playlists.as_list()[playlist_nr]
         self.core.tracklist.clear()
         self.core.tracklist.add(uri=playlist)
+        self.core.playback.play()
 
     def toggle_mute(self):
         mute = not self.core.playback.mute.get()
