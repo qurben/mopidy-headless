@@ -32,14 +32,14 @@ class InputThread(threading.Thread):
             device = InputDevice(handler.device_fn)
             self.devices_by_fn[handler.device_fn] = device
             self.devices_by_fd[device.fd] = device
-            self.handlers_by_fd[device.fd] = []
+            self.handlers_by_fd[device.fd] = set()
 
         # Check if device has needed event
         capabilities = device.capabilities()
         if handler.event_type in capabilities:
             for event_code in handler.event_codes:
                 if event_code in capabilities[handler.event_type]:
-                    self.handlers_by_fd[device.fd].append(handler)
+                    self.handlers_by_fd[device.fd].add(handler)
                 else:
                     logger.warning('Event {0} not found in input device "{1}"'.format(
                         ecodes.bytype[handler.event_type][handler.event_code], device.name))
