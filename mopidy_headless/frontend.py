@@ -77,7 +77,7 @@ class MuteHandler(KeyHandler):
 
 class ShuffleHandler(KeyHandler):
     def press(self, actor_proxy):
-        actor_proxy.set_random(not actor_proxy.get_random())
+        actor_proxy.toggle_shuffle()
 
 
 class InputFrontend(pykka.ThreadingActor, core.CoreListener):
@@ -146,6 +146,9 @@ class InputFrontend(pykka.ThreadingActor, core.CoreListener):
 
     def pause(self):
         self.core.playback.pause()
+
+    def toggle_shuffle(self):
+        self.core.playback.set_random(not self.core.playback.get_random())
 
     def playpause_toggle(self):
         if self.core.playback.state.get() == core.PlaybackState.PLAYING:
