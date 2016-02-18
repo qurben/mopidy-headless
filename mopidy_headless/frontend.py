@@ -4,6 +4,8 @@ import logging
 
 from mopidy import core
 
+from evdev import ecodes
+
 import pykka
 
 from .input import InputThread, Handler
