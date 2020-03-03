@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import logging
 
 from mopidy import core
+from mopidy.core import PlaybackState
 
 from evdev import ecodes
 
@@ -131,26 +132,26 @@ class InputFrontend(pykka.ThreadingActor, core.CoreListener):
         self.inputthread.stop()
 
     def change_volume(self, value):
-        volume = self.core.playback.volume.get() + value
+        volume = self.core.mixer.get_volume().get() + value
         if volume < 0:
             volume = 0
         elif volume > 100:
             volume = 100
 
         logger.debug("Volume changed: {0}".format(volume))
-        self.core.playback.volume = volume
+        self.core.mixer.set_volume(volume).get()
 
     def next_song(self):
-        self.core.playback.next()
+        self.core.playback.next().get()
 
     def previous_song(self):
-        self.core.playback.previous()
+        self.core.playback.previous().get()
 
     def change_playlist(self, value):
         self.selected_playlist = (self.selected_playlist + value) % len(self.playlists)
-        self.core.tracklist.clear()
+        self.core.tracklist.clear().get()
         self.core.tracklist.add(uri=self.playlists[self.selected_playlist].uri)
-        self.core.playback.play()
+        self.core.playback.play().get()
 
     def next_playlist(self):
         self.change_playlist(1)
@@ -159,33 +160,36 @@ class InputFrontend(pykka.ThreadingActor, core.CoreListener):
         self.change_playlist(-1)
 
     def play(self):
-        self.core.playback.play()
+        self.core.playback.play().get()
 
     def pause(self):
-        self.core.playback.pause()
+        self.core.playback.pause().get()
 
     def toggle_shuffle(self):
-        self.core.tracklist.set_random(not self.core.tracklist.get_random().get())
+        self.core.tracklist.set_random(not self.core.tracklist.get_random().get()).get()
 
     def playpause_toggle(self):
-        if self.core.playback.state.get() == core.PlaybackState.PLAYING:
-            self.core.playback.pause()
-        else:
-            self.core.playback.play()
+        state = self.core.playback.get_state().get()
+        if state == PlaybackState.PLAYING:
+            self.core.playback.pause().get()
+        elif state == PlaybackState.PAUSED:
+            self.core.playback.resume().get()
+        elif state == PlaybackState.STOPPED:
+            self.core.playback.play().get()
 
     def set_playlist(self, playlist_nr):
         selected_playlist = self.playlists[playlist_nr]
-        self.core.tracklist.clear()
+        self.core.tracklist.clear().get()
         self.core.tracklist.add(uri=selected_playlist.uri)
-        self.core.playback.play()
+        self.core.playback.play().get()
 
     def toggle_mute(self):
-        mute = not self.core.playback.mute.get()
+        mute = not self.core.mixer.get_mute().get()
         logger.debug("Muted: {0}".format(mute))
-        self.core.playback.mute = mute
+        self.core.mixer.set_mute(mute).get()
 
     def playlists_loaded(self):
         self.playlists = []
-        for playlist in self.core.playlists.playlists.get():
+        for playlist in self.core.playlists.as_list().get():
             self.playlists.append(playlist)
         self.selected_playlist = 0
